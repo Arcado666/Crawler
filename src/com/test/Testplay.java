@@ -83,6 +83,7 @@ public class Testplay {
 	 * 测试代码
 	 */
 	public static void main(String[] args) {
+		
 		// 抓取 iwjw 首页，输出
 		try {
 			System.err.println(Testplay.downloadPage("http://www.sina.com"));

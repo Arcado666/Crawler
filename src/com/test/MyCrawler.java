@@ -42,7 +42,8 @@ public class MyCrawler {
 		while (!LinkQueue.unVisitedUrlsEmpty() && LinkQueue.getVisitedUrlNum() <= 1000) {
 			// 队头 URL 出队列
 			String visitUrl = (String) LinkQueue.unVisitedUrlDeQueue();
-			if (visitUrl == null)
+			
+			if (visitUrl == null || !visitUrl.contains("void"))
 				continue;
 			DownLoadFile downLoader = new DownLoadFile();
 			// 下载网页

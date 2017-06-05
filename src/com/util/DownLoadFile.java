@@ -4,6 +4,9 @@ import java.io.DataOutputStream;
 import java.io.File;
 import java.io.FileOutputStream;
 import java.io.IOException;
+import java.io.InputStream;
+import java.io.InputStreamReader;
+import java.io.Reader;
 
 import org.apache.commons.httpclient.DefaultHttpMethodRetryHandler;
 import org.apache.commons.httpclient.HttpClient;
@@ -53,6 +56,7 @@ public class DownLoadFile {
 		// 设置 HTTP 连接超时 5s
 		httpClient.getHttpConnectionManager().getParams().setConnectionTimeout(5000);
 		// 2.生成 GetMethod 对象并设置参数
+		System.out.println("url="+url+"~~~~~~~~~~~");
 		GetMethod getMethod = new GetMethod(url);
 		// 设置 get 请求超时 5s
 		getMethod.getParams().setParameter(HttpMethodParams.SO_TIMEOUT, 5000);
@@ -65,12 +69,15 @@ public class DownLoadFile {
 			if (statusCode != HttpStatus.SC_OK) {
 				System.err.println("Method failed: " + getMethod.getStatusLine());
 				filePath = null;
+			}else {
+				// 4.处理 HTTP 响应内容
+				byte[] responseBody = getMethod.getResponseBody();// 读取为字节数组
+				
+				// 根据网页 url 生成保存时的文件名
+				filePath = "temp\\" + getFileNameByUrl(url, getMethod.getResponseHeader("Content-Type").getValue());
+				saveToLocal(responseBody, filePath);
 			}
-			// 4.处理 HTTP 响应内容
-			byte[] responseBody = getMethod.getResponseBody();// 读取为字节数组
-			// 根据网页 url 生成保存时的文件名
-			filePath = "temp\\" + getFileNameByUrl(url, getMethod.getResponseHeader("Content-Type").getValue());
-			saveToLocal(responseBody, filePath);
+			
 		} catch (HttpException e) {
 			// 发生致命的异常，可能是协议不对或者返回的内容有问题
 			System.out.println("Please check your provided http address!");
