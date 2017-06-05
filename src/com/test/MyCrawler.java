@@ -61,7 +61,7 @@ public class MyCrawler {
 
 	// main 方法入口
 	public static void main(String[] args) {
-		System.setProperty("javax.Net.ssl.trustStore", "cert/jssecacerts");
+//		System.setProperty("javax.Net.ssl.trustStore", "cert/jssecacerts");
 		String url = "http://www.iwjw.com";
 		MyCrawler crawler = new MyCrawler();
 		crawler.crawling(new String[] { url },url);
