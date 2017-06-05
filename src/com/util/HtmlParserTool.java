@@ -68,6 +68,62 @@ public class HtmlParserTool {
               
         } catch (ParserException e) {  
             e.printStackTrace();  
+            System.out.println("~~"+url);
+            //如果是因为字符集必须为GBK，则更改成GBK的字符集重新来一次
+            if (e.toString().contains("change from UTF-8 to GBK")) {
+            	 try {  
+                     Parser parser = new Parser(url);  
+                     parser.setEncoding("GBK");  
+                  // 过滤 <frame >标签的 filter，用来提取 frame 标签里的 src 属性
+                     NodeFilter frameFilter = new NodeFilter() {  
+                         @Override  
+                         public boolean accept(Node node) {  
+                             if(node.getText().startsWith("frame src=")) {  
+                                 return true;  
+                             }  
+                               
+                             return false;  
+                         }  
+                     };  
+                  // OrFilter 来设置过滤 <a> 标签和 <frame> 标签
+                     OrFilter linkFilter =   
+                         new OrFilter(new NodeClassFilter(LinkTag.class), frameFilter);  
+                     NodeList list = parser.extractAllNodesThatMatch(linkFilter);  
+                     for(int i=0; i<list.size(); i++) {  
+                         Node tag = list.elementAt(i);  
+                         if( tag instanceof LinkTag) {  // <a> 标签
+                             LinkTag link = (LinkTag) tag;  
+                             String linkUrl = link.getLink();  // URL
+                             if(filter.accept(url)) {  
+                                 links.add(linkUrl);  
+                             } else {  // <frame> 标签
+                             	// 提取 frame 里 src 属性的链接，如 <frame src="test.html"/>
+                                 String frame = tag.getText();  
+                                 int start  = frame.indexOf("src=");  
+                                 if( start != -1) {  
+                                     frame = frame.substring(start);  
+                                 }  
+                                 int end = frame.indexOf(" ");  
+                                 String frameUrl = "";  
+                                 if(end == -1) {  
+                                     end = frame.indexOf(">");  
+                                     if(end-1 > 5) {  
+                                        frameUrl = frame.substring(5, end - 1);  
+                                     }  
+                                 }  
+                                   
+                                 if(filter.accept(frameUrl)) {  
+                                     links.add(frameUrl);  
+                                 }  
+                                   
+                             }  
+                         }  
+                     }  
+                       
+                 } catch (ParserException ee) {  
+                     ee.printStackTrace();  
+                 }    
+			}
         }    
         return links;  
     }  

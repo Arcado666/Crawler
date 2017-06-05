@@ -1,6 +1,9 @@
 package com.test;
 
+import java.net.SocketTimeoutException;
 import java.util.Set;
+
+import org.apache.http.conn.ConnectTimeoutException;
 
 import com.util.DownLoadFile;
 import com.util.HtmlParserTool;
@@ -25,8 +28,11 @@ public class MyCrawler {
 	 * 
 	 * @return
 	 * @param seeds
+	 * @throws Exception 
+	 * @throws SocketTimeoutException 
+	 * @throws ConnectTimeoutException 
 	 */
-	public void crawling(String[] seeds,String Myurl) { // 定义过滤器，提取以 http://www.lietu.com
+	public void crawling(String[] seeds,String Myurl) throws ConnectTimeoutException, SocketTimeoutException, Exception { // 定义过滤器，提取以 http://www.lietu.com
 											// 开头的链接
 		LinkFilter filter = new LinkFilter() {
 			public boolean accept(String url) {
@@ -43,7 +49,7 @@ public class MyCrawler {
 			// 队头 URL 出队列
 			String visitUrl = (String) LinkQueue.unVisitedUrlDeQueue();
 			
-			if (visitUrl == null || visitUrl.contains("void"))
+			if (visitUrl == null || visitUrl.contains("void") || visitUrl.contains("@"))
 				continue;
 			DownLoadFile downLoader = new DownLoadFile();
 			// 下载网页
@@ -60,8 +66,8 @@ public class MyCrawler {
 	}
 
 	// main 方法入口
-	public static void main(String[] args) {
-//		System.setProperty("javax.Net.ssl.trustStore", "cert/jssecacerts");
+	public static void main(String[] args) throws ConnectTimeoutException, SocketTimeoutException, Exception {
+		System.setProperty("javax.Net.ssl.trustStore", "cert/jssecacerts");
 		String url = "http://www.iwjw.com";
 		MyCrawler crawler = new MyCrawler();
 		crawler.crawling(new String[] { url },url);

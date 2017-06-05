@@ -83,10 +83,10 @@ public class Testplay {
 	 * 测试代码
 	 */
 	public static void main(String[] args) {
-		
+		System.setProperty("javax.Net.ssl.trustStore", "cert/jssecacerts");
 		// 抓取 iwjw 首页，输出
 		try {
-			System.err.println(Testplay.downloadPage("http://www.sina.com"));
+			System.err.println(Testplay.downloadPage("https://yingyu.chazidian.com"));
 		} catch (HttpException e) {
 			// TODO Auto-generated catch block
 			e.printStackTrace();
