@@ -43,7 +43,7 @@ public class MyCrawler {
 			// 队头 URL 出队列
 			String visitUrl = (String) LinkQueue.unVisitedUrlDeQueue();
 			
-			if (visitUrl == null || !visitUrl.contains("void"))
+			if (visitUrl == null || visitUrl.contains("void"))
 				continue;
 			DownLoadFile downLoader = new DownLoadFile();
 			// 下载网页
