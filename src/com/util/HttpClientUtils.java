@@ -234,7 +234,7 @@ public class HttpClientUtils {
                 customReqConf.setSocketTimeout(readTimeout);  
             }  
             get.setConfig(customReqConf.build());  
-  
+            
             HttpResponse res = null;  
   
             if (url.startsWith("https")) {  

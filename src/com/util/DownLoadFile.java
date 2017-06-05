@@ -10,6 +10,7 @@ import org.apache.commons.httpclient.DefaultHttpMethodRetryHandler;
 import org.apache.commons.httpclient.HttpClient;
 import org.apache.commons.httpclient.HttpException;
 import org.apache.commons.httpclient.HttpStatus;
+import org.apache.commons.httpclient.cookie.CookiePolicy;
 import org.apache.commons.httpclient.methods.GetMethod;
 import org.apache.commons.httpclient.params.HttpMethodParams;
 
@@ -61,6 +62,8 @@ public class DownLoadFile {
 		getMethod.getParams().setParameter(HttpMethodParams.SO_TIMEOUT, 10000);
 		// 设置请求重试处理
 		getMethod.getParams().setParameter(HttpMethodParams.RETRY_HANDLER, new DefaultHttpMethodRetryHandler());
+		//使用httpclient进行模拟提交时，发现出现这个问题，先是需要重定向，然后重定向了之后就提示这个。网上资料表示，要设置一下cookie的policy  post方法设置一致
+		getMethod.getParams().setParameter("http.protocol.cookie-policy",CookiePolicy.BROWSER_COMPATIBILITY);
 		// 3.执行 HTTP GET 请求
 		try {
 			httpClient = new HttpClient();

@@ -67,8 +67,7 @@ public class MyCrawler {
 
 	// main 方法入口
 	public static void main(String[] args) throws ConnectTimeoutException, SocketTimeoutException, Exception {
-		System.setProperty("javax.Net.ssl.trustStore", "cert/jssecacerts");
-		String url = "http://www.iwjw.com";
+		String url = "http://sh.58.com";
 		MyCrawler crawler = new MyCrawler();
 		crawler.crawling(new String[] { url },url);
 	}

@@ -40,8 +40,13 @@ public class HtmlParserTool {
                 if( tag instanceof LinkTag) {  // <a> 标签
                     LinkTag link = (LinkTag) tag;  
                     String linkUrl = link.getLink();  // URL
-                    if(filter.accept(url)) {  
-                        links.add(linkUrl);  
+                    if(filter.accept(url)) {
+                    	if (linkUrl.contains(".com") || linkUrl.contains(".cn")) {
+                    		links.add(linkUrl);
+						}else {
+							links.add(url+linkUrl);
+						}
+                          
                     } else {  // <frame> 标签
                     	// 提取 frame 里 src 属性的链接，如 <frame src="test.html"/>
                         String frame = tag.getText();  
@@ -69,11 +74,17 @@ public class HtmlParserTool {
         } catch (ParserException e) {  
             e.printStackTrace();  
             System.out.println("~~"+url);
-            //如果是因为字符集必须为GBK，则更改成GBK的字符集重新来一次
+            
+            //如果是因为字符集必须为GBK，则更改成GBK的字符集重新来一次  
+            String code = "GBK" ;
             if (e.toString().contains("change from UTF-8 to GBK")) {
+            	code = "GBK";
+            	}else if (e.toString().contains("change from UTF-8 to GB2312")) {
+            		code = "GB2312";
+				}
             	 try {  
                      Parser parser = new Parser(url);  
-                     parser.setEncoding("GBK");  
+                     parser.setEncoding(code);  
                   // 过滤 <frame >标签的 filter，用来提取 frame 标签里的 src 属性
                      NodeFilter frameFilter = new NodeFilter() {  
                          @Override  
@@ -95,7 +106,11 @@ public class HtmlParserTool {
                              LinkTag link = (LinkTag) tag;  
                              String linkUrl = link.getLink();  // URL
                              if(filter.accept(url)) {  
-                                 links.add(linkUrl);  
+                            	 if (linkUrl.contains(".com") || linkUrl.contains(".cn")) {
+                             		links.add(linkUrl);
+         						}else {
+         							links.add(url+linkUrl);
+         						}  
                              } else {  // <frame> 标签
                              	// 提取 frame 里 src 属性的链接，如 <frame src="test.html"/>
                                  String frame = tag.getText();  
@@ -122,7 +137,6 @@ public class HtmlParserTool {
                        
                  } catch (ParserException ee) {  
                      ee.printStackTrace();  
-                 }    
 			}
         }    
         return links;  
